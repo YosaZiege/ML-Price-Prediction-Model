@@ -10,11 +10,31 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
-import * as React from "react";
 import { useState } from "react";
 
+// ------------------------
+// 1️⃣ Define the TypeScript type
+// ------------------------
+type HouseData = {
+   area: number;
+   bedrooms: number;
+   bathrooms: number;
+   stories: number;
+   parking: number;
+   mainroad: "yes" | "no";
+   guestroom: "yes" | "no";
+   basement: "yes" | "no";
+   hotwaterheating: "yes" | "no";
+   airconditioning: "yes" | "no";
+   prefarea: "yes" | "no";
+   furnishingstatus: "furnished" | "semi-furnished" | "unfurnished";
+};
+
 export default function HouseForm() {
-   const [formData, setFormData] = useState({
+   // ------------------------
+   // 2️⃣ use the type for state
+   // ------------------------
+   const [formData, setFormData] = useState<HouseData>({
       area: 6000,
       bedrooms: 3,
       bathrooms: 2,
@@ -32,11 +52,14 @@ export default function HouseForm() {
    const [result, setResult] = useState<string | null>(null);
    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-   const handleChange = (key: string, value: any) => {
+   const handleChange = <K extends keyof HouseData>(
+      key: K,
+      value: HouseData[K],
+   ) => {
       setFormData((prev) => ({ ...prev, [key]: value }));
    };
 
-   async function submitHouseData(formData: any) {
+   const submitHouseData = async (formData: HouseData) => {
       try {
          const response = await fetch(apiUrl!, {
             method: "POST",
@@ -44,24 +67,20 @@ export default function HouseForm() {
             body: JSON.stringify(formData),
          });
 
-         if (!response.ok) {
+         if (!response.ok)
             throw new Error(`Erreur HTTP ! Status: ${response.status}`);
-         }
 
          const data = await response.json();
-         console.log("Prédiction:", data);
-
          if (data && data.prediction !== undefined) {
             const roundedPrice = Math.round(data.prediction);
             setResult(`Le prix sera d'environ ${roundedPrice} MAD`);
          }
-
          return data;
       } catch (err) {
          console.error("Erreur lors de l'appel à l'API:", err);
          setResult("Une erreur est survenue lors de la prédiction.");
       }
-   }
+   };
 
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -87,14 +106,13 @@ export default function HouseForm() {
                      <label className="block mb-1">{label}</label>
                      <Input
                         type="number"
-                        value={formData[key as keyof typeof formData]}
+                        value={formData[key as keyof HouseData] as number} // cast to number
                         onChange={(e) =>
-                           handleChange(key as string, Number(e.target.value))
+                           handleChange(key as keyof HouseData, Number(e.target.value))
                         }
                      />
                   </div>
                ))}
-
                {/* Yes/No Select Inputs */}
                {[
                   ["mainroad", "Route principale"],
@@ -107,8 +125,10 @@ export default function HouseForm() {
                   <div key={key as string}>
                      <label className="block mb-1">{label}</label>
                      <Select
-                        value={formData[key as keyof typeof formData]}
-                        onValueChange={(value) => handleChange(key as string, value)}
+                        value={formData[key as keyof HouseData] as "yes" | "no"} // <-- cast here
+                        onValueChange={(value) =>
+                           handleChange(key as keyof HouseData, value as "yes" | "no")
+                        }
                      >
                         <SelectTrigger>
                            <SelectValue placeholder="Sélectionner une option" />
@@ -119,14 +139,23 @@ export default function HouseForm() {
                         </SelectContent>
                      </Select>
                   </div>
-               ))}
-
+               ))}{" "}
                {/* Furnishing Status */}
                <div>
                   <label className="block mb-1">État du mobilier</label>
                   <Select
-                     value={formData.furnishingstatus}
-                     onValueChange={(value) => handleChange("furnishingstatus", value)}
+                     value={
+                        formData.furnishingstatus as
+                        | "furnished"
+                        | "semi-furnished"
+                        | "unfurnished"
+                     }
+                     onValueChange={(value) =>
+                        handleChange(
+                           "furnishingstatus",
+                           value as "furnished" | "semi-furnished" | "unfurnished",
+                        )
+                     }
                   >
                      <SelectTrigger>
                         <SelectValue placeholder="Sélectionner le mobilier" />
@@ -138,13 +167,11 @@ export default function HouseForm() {
                      </SelectContent>
                   </Select>
                </div>
-
                <Button type="submit" className="mt-4">
                   Soumettre
                </Button>
             </form>
 
-            {/* Display API result */}
             {result && (
                <pre className="mt-6 p-4 bg-gray-100 rounded text-sm">{result}</pre>
             )}
