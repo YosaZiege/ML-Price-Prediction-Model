@@ -207,7 +207,7 @@ export default function HouseForm() {
 
                         <div className=" min-w-[150px]">
                            <label className="flex items-center gap-1 text-gray-600">
-                              <Layers className="w-5 h-5" /> Nombre d'étages
+                              <Layers className="w-5 h-5" /> Nombre d&apos;étages
                            </label>
                            <Input
                               type="number"
@@ -233,7 +233,9 @@ export default function HouseForm() {
                            </label>
                            <Select
                               value={formData.mainroad}
-                              onValueChange={(value) => handleChange("mainroad", value)}
+                              onValueChange={(value) =>
+                                 handleChange("mainroad", value as "yes" | "no")
+                              }
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Sélectionner une option" />
@@ -251,7 +253,9 @@ export default function HouseForm() {
                            </label>
                            <Select
                               value={formData.prefarea}
-                              onValueChange={(value) => handleChange("prefarea", value)}
+                              onValueChange={(value) =>
+                                 handleChange("prefarea", value as "yes" | "no")
+                              }
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Sélectionner une option" />
@@ -297,7 +301,7 @@ export default function HouseForm() {
                            <Select
                               value={formData.hotwaterheating}
                               onValueChange={(value) =>
-                                 handleChange("hotwaterheating", value)
+                                 handleChange("hotwaterheating", value as "yes" | "no")
                               }
                            >
                               <SelectTrigger>
@@ -317,7 +321,7 @@ export default function HouseForm() {
                            <Select
                               value={formData.airconditioning}
                               onValueChange={(value) =>
-                                 handleChange("airconditioning", value)
+                                 handleChange("airconditioning", value as "yes" | "no")
                               }
                            >
                               <SelectTrigger>
@@ -332,11 +336,13 @@ export default function HouseForm() {
 
                         <div className="min-w-[150px]">
                            <label className="flex items-center gap-1 mb-1 text-gray-600">
-                              <BedDouble className="w-5 h-5" /> Chambre d'amis
+                              <BedDouble className="w-5 h-5" /> Chambre d&apos;amis
                            </label>
                            <Select
                               value={formData.guestroom}
-                              onValueChange={(value) => handleChange("guestroom", value)}
+                              onValueChange={(value) =>
+                                 handleChange("guestroom", value as "yes" | "no")
+                              }
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Sélectionner une option" />
@@ -354,7 +360,9 @@ export default function HouseForm() {
                            </label>
                            <Select
                               value={formData.basement}
-                              onValueChange={(value) => handleChange("basement", value)}
+                              onValueChange={(value) =>
+                                 handleChange("basement", value as "yes" | "no")
+                              }
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Sélectionner une option" />
@@ -373,7 +381,10 @@ export default function HouseForm() {
                            <Select
                               value={formData.furnishingstatus}
                               onValueChange={(value) =>
-                                 handleChange("furnishingstatus", value)
+                                 handleChange(
+                                    "furnishingstatus",
+                                    value as "unfurnished" | "semi-furnished" | "furnished",
+                                 )
                               }
                            >
                               <SelectTrigger>
@@ -405,7 +416,7 @@ export default function HouseForm() {
          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-[400px]">
                <DialogHeader>
-                  <DialogTitle>Résultat de l'estimation</DialogTitle>
+                  <DialogTitle>Résultat de l&apos;estimation</DialogTitle>
                </DialogHeader>
                <p className="text-lg mt-2">{result}</p>
                <DialogFooter>
