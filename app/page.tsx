@@ -183,6 +183,8 @@ export default function HouseForm() {
                            </label>
                            <Input
                               type="number"
+                              min={1}
+                              max={10}
                               value={formData.bedrooms}
                               onChange={(e) =>
                                  handleChange("bedrooms", Number(e.target.value))
@@ -198,6 +200,8 @@ export default function HouseForm() {
                            <Input
                               type="number"
                               value={formData.bathrooms}
+                              min={1}
+                              max={10}
                               onChange={(e) =>
                                  handleChange("bathrooms", Number(e.target.value))
                               }
@@ -212,6 +216,8 @@ export default function HouseForm() {
                            <Input
                               type="number"
                               value={formData.stories}
+                              min={1}
+                              max={10}
                               onChange={(e) =>
                                  handleChange("stories", Number(e.target.value))
                               }
